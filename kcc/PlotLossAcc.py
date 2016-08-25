@@ -8,29 +8,25 @@ class PlotLossAcc(Callback):
         super(PlotLossAcc, self).__init__()        
         
     def on_train_begin(self, logs={}):
-        self.losses = []
-        self.acc = []
+        self.val_losses = []
+        self.val_acc = []
         self.epoch_num = 0
-##        self.plot_layers = []
-##        for layer in range(len(self.model.layers)):
-##            if type(self.model.layers[layer]) == Convolution2D or type(self.model.layers[layer]) == Dense:
-##                self.plot_layers.append(layer_index)
 
     def on_epoch_end(self, epoch, logs={}):
-        self.losses.append(logs.get('val_loss'))
-        self.acc.append(logs.get('val_acc'))
+        self.val_losses.append(logs.get('val_loss'))
+        self.val_acc.append(logs.get('val_acc'))
         self.epoch_num += 1
         
         if self.epoch_num % self.plot_interval == 0 :
             plt.figure()
             plt.subplot(121)
-            plt.plot(self.losses)
-            plt.title('Loss Vs Epoch')
-            plt.xlabel('Epoch'); plt.ylabel('Loss')
+            plt.plot(self.val_losses)
+            plt.title('Val_Loss Vs Epoch')
+            plt.xlabel('Epoch'); plt.ylabel('Val_Loss')
             plt.subplot(122)
-            plt.plot(self.acc)
+            plt.plot(self.val_acc)
             plt.title('Acc Vs Epoch')
-            plt.xlabel('Epoch'); plt.ylabel('Acc')
+            plt.xlabel('Epoch'); plt.ylabel('Val_Acc')
             plt.ylim(0,1)
-            plt.savefig('{}/loss_acc.png'.format(self.plot_dir))
+            plt.savefig('{}/val-loss_val-acc.png'.format(self.plot_dir))
             plt.close()
